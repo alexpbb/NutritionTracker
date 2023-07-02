@@ -25,17 +25,19 @@ public class SignUp extends Application {
         grid.setVgap(5);
         grid.setHgap(10);
         grid.setPadding(new Insets(20));
+        //grid.setGridLinesVisible(true);
 
         GridPane grid2 = new GridPane();
         grid2.setAlignment(Pos.CENTER);
         grid2.setVgap(5);
         grid2.setHgap(10);
         grid2.setPadding(new Insets(25));
+        //grid2.setGridLinesVisible(true);
 
         //Scene ONE
-        Text welcome = new Text("WELCOME");
+        Text welcome = new Text("NUTRITION TRACKER");
         welcome.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
-        grid.add(welcome, 1, 0);
+        grid.add(welcome, 2, 0);
         TextField fNameField = new TextField();
         TextField lNameField = new TextField();
         Button submit = new Button("Submit");
@@ -59,7 +61,7 @@ public class SignUp extends Application {
         Scene scene1 = new Scene(grid2, 500, 450);
         Text welcome2 = new Text("USER INFO");
         welcome2.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
-        grid2.add(welcome2, 1, 0);
+        grid2.add(welcome2, 2, 0);
         TextField ageField = new TextField();
         TextField heightField = new TextField();
         TextField weightField = new TextField();
@@ -90,9 +92,8 @@ public class SignUp extends Application {
 
         submit.setOnAction (new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) throws IllegalArgumentException {
-                if (fNameField != null && lNameField != null && !fNameField.getText().isEmpty() && !lNameField.getText().isEmpty()) {
-                    String fName = fNameField.getText();
-                    String lname = lNameField.getText();
+                if (!fNameField.getText().isEmpty() && !lNameField.getText().isEmpty()) {
+                    //String name = fNameField.getText() + " " + lNameField.getText();
                     primaryStage.setScene(scene1);
                     primaryStage.show();
 
@@ -105,11 +106,22 @@ public class SignUp extends Application {
 
         submit2.setOnAction (new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) throws IllegalArgumentException {
-                if (ageField != null && heightField != null && weightField != null && Double.parseDouble(ageField.getText()) >= 13.0 && Double.parseDouble(heightField.getText()) > 0 && Double.parseDouble(weightField.getText()) > 0) {
+                if (!ageField.getText().isEmpty() && !heightField.getText().isEmpty()  && !weightField.getText().isEmpty() 
+                    && Double.parseDouble(ageField.getText()) >= 13.0 && Double.parseDouble(heightField.getText()) > 0 && Double.parseDouble(weightField.getText()) > 0) {
+                    String name = fNameField.getText() + " " + lNameField.getText();
                     int age = Integer.parseInt(ageField.getText());
                     double height = Double.parseDouble(heightField.getText());
                     double weight = Double.parseDouble(weightField.getText());
-                    System.out.println(age);
+                    System.out.println(name);
+                    if ((!lose.isSelected() && !gain.isSelected()) || (lose.isSelected() && gain.isSelected())) {
+                        Label message3 = new Label("Select one goal.");
+                        grid2.getChildren().removeIf( node -> GridPane.getColumnIndex(node) == 1 && GridPane.getRowIndex(node) == 7);
+                        grid2.add(message3, 1, 7);
+                    } else if (lose.isSelected()) {
+                        User user = new User(name, age, height, weight, true);
+                    } else {
+                        User user = new User(name, age, height, weight, false);
+                    }
                 } else {
                     Label message2 = new Label("Invalid input.");
                     grid2.add(message2, 1, 7);
