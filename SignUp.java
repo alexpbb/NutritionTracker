@@ -68,16 +68,16 @@ public class SignUp extends Application {
 
         Button submit2 = new Button("Submit");
         ageField.setPromptText("Enter age");
-        heightField.setPromptText("Enter height");
-        weightField.setPromptText("Enter weight");
+        heightField.setPromptText("Enter height (inches)");
+        weightField.setPromptText("Enter weight (kg)");
         grid2.add(ageField, 2, 1);
         grid2.add(heightField, 2, 2);
         grid2.add(weightField, 2, 3);
         grid2.add(submit2, 3, 7);
 
         Label a = new Label("Age");
-        Label h = new Label("Height");
-        Label w = new Label("Weight");
+        Label h = new Label("Height (in)");
+        Label w = new Label("Weight (kg)");
         grid2.add(a, 1, 1);
         grid2.add(h, 1, 2);
         grid2.add(w, 1, 3);
@@ -88,12 +88,10 @@ public class SignUp extends Application {
         grid2.add(goal, 2,4);
         grid2.add(lose, 2,5);
         grid2.add(gain, 2,6);
-        
 
         submit.setOnAction (new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) throws IllegalArgumentException {
                 if (!fNameField.getText().isEmpty() && !lNameField.getText().isEmpty()) {
-                    //String name = fNameField.getText() + " " + lNameField.getText();
                     primaryStage.setScene(scene1);
                     primaryStage.show();
 
@@ -112,15 +110,23 @@ public class SignUp extends Application {
                     int age = Integer.parseInt(ageField.getText());
                     double height = Double.parseDouble(heightField.getText());
                     double weight = Double.parseDouble(weightField.getText());
-                    System.out.println(name);
                     if ((!lose.isSelected() && !gain.isSelected()) || (lose.isSelected() && gain.isSelected())) {
                         Label message3 = new Label("Select one goal.");
                         grid2.getChildren().removeIf( node -> GridPane.getColumnIndex(node) == 1 && GridPane.getRowIndex(node) == 7);
                         grid2.add(message3, 1, 7);
                     } else if (lose.isSelected()) {
                         User user = new User(name, age, height, weight, true);
+                        Home menu = new Home(user);
+                        Scene scene2 = new Scene(menu.newHome(), 1240, 800);
+                        primaryStage.setScene(scene2);
+                        primaryStage.show();
+
                     } else {
                         User user = new User(name, age, height, weight, false);
+                        Home menu = new Home(user);
+                        Scene scene2 = new Scene(menu.newHome(), 1240, 800);
+                        primaryStage.setScene(scene2);
+                        primaryStage.show();
                     }
                 } else {
                     Label message2 = new Label("Invalid input.");
@@ -128,17 +134,8 @@ public class SignUp extends Application {
                 }
             }
         });
-
-
     }
-
-    // if (sex.equals("Female")) {
-    //     this.weight = 117 + (height - 60) * 2.9;
-    // }
-    // this.weight = 124 + (height - 60) * 3.1;
-
     public static void main(String[] args) {
         launch(args);
     }
-
 }

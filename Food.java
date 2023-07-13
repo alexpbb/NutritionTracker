@@ -1,24 +1,31 @@
-import java.util.ArrayList;
-
 public class Food {
-    ArrayList<String> ingredients;
-    double calories;
+    private String ingredients;
+    private double calories;
+    private double serving;
 
-    public Food(ArrayList<String> list, double calories) {
-        ingredients = new ArrayList<>(list);
+    public Food(String ingredients, double calories, double serving) {
+        this.ingredients = ingredients;
         this.calories = calories;
-        //this.serving = serving;
+        this.serving = serving;
     }
 
-    public void removeIngr(String target) {
-        for(int i = 0; i < ingredients.size(); i++) {
-            if(target.equals(ingredients.get(i))) {
-                ingredients.remove(i);
-            }
-        }
+    public String getIngredients() {
+        return ingredients;
     }
-
-    public void addIngr(String ing) {
-        ingredients.add(ing);
+    public double getCalories() {
+        return calories;
+    }
+    public double getServing() {
+        return serving;
+    }
+    
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
+    }
+    public void setCalories(double cal) {
+        this.calories = cal;
+    }
+    public void setServing(double serv) {
+        this.serving = serv;
     }
 }
