@@ -117,7 +117,7 @@ public class SignUp extends Application {
                     } else if (lose.isSelected()) {
                         User user = new User(name, age, height, weight, true);
                         Home menu = new Home(user);
-                        Scene scene2 = new Scene(menu.newHome(), 1240, 800);
+                        Scene scene2 = new Scene(menu.newHome(), 1240, 640);
                         primaryStage.setScene(scene2);
                         primaryStage.show();
 

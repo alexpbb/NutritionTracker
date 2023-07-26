@@ -1,4 +1,4 @@
-public class Food {
+public class Food implements Comparable{
     private String ingredients;
     private double calories;
     private double serving;
@@ -27,5 +27,13 @@ public class Food {
     }
     public void setServing(double serv) {
         this.serving = serv;
+    }
+
+    public int compareTo(Object object) {
+        Food obj = (Food) object;
+        if (this.ingredients.equals(obj.ingredients)) {
+            return (int) (this.calories - obj.calories);
+        }
+        return this.ingredients.compareTo(obj.ingredients);
     }
 }
