@@ -21,11 +21,53 @@ import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class Home extends Application{
+import javafx.scene.paint.Color;
+import javafx.animation.TranslateTransition;
+//import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
+//import javafx.scene.layout.StackPane;
+import javafx.animation.Interpolator;
+import javafx.geometry.Pos;
+import javafx.scene.layout.Priority;
+
+public class Home extends Application {
     private User user;
     private ObservableList<Food> data = FXCollections.observableArrayList();
     private double totalCals;
     //private ObservableList<String> filter = FXCollections.observableArrayList();
+
+    private BorderPane pane;
+    private VBox leftSide;
+    private Text hello;
+    private Label overview;
+    private Label log;
+    private TextField food;
+    private TextField serv;
+    private TextField cal;
+    private Button addFood;
+    private Button addFilter;
+    private ComboBox<String> combo;
+    private ProgressBar bar;
+    private HBox hb;
+    private VBox vb;
+    private TableView<Food> table;
+    private TableColumn<Food, String> col;
+    private TableColumn<Food, String> col2;
+    private TableColumn<Food, String> col3;
+
+    private boolean isMenuOpen = false;
+    private HBox menuBar;
+    private Button homeButton;
+    private Button toggleButton;
+    private Button helpButton;
+    private Button userButton;
+    private Button languageButton;
+    /*
+    private VBox menuBar;
+    private Button homeButton;
+    private StackPane contentPane;
+    */
 
     public Home(User user) {
         this.user = user;
@@ -33,46 +75,73 @@ public class Home extends Application{
 
     public BorderPane newHome() {
         //Formatting
-        BorderPane pane = new BorderPane();
-        HBox hb = new HBox();
+        pane = new BorderPane();
+        hb = new HBox();
         hb.setSpacing(3);
-        VBox vb = new VBox();
+        vb = new VBox();
         vb.setSpacing(5);
         vb.setPadding(new Insets(20, 40, 20, 40));
-        Text hello = new Text("Hello, " + user.getName());
+        hello = new Text("Hello, " + user.getName());
         hello.setFont(Font.font("Tahoma", FontWeight.BOLD, 25));
         pane.setTop(hello);
 
+        BorderPane menuBase = new BorderPane();
+        menuBar = new HBox();
+        menuBar.setSpacing(10);
+        menuBar.setAlignment(Pos.CENTER);
+        menuBar.setMinHeight(60);
+        homeButton = new Button("\u2261");
+        homeButton.setPrefSize(180, 120);
+        homeButton.setFont(Font.font("Tahoma", FontWeight.BOLD, 40));
+        homeButton.setShape(new Circle(120));
+        homeButton.setTranslateY(-60);
+        toggleButton = new Button("Theme");
+        languageButton = new Button("Language");
+        userButton = new Button("User");
+        helpButton = new Button("Help");
+        menuBar.getChildren().addAll(languageButton, toggleButton, homeButton, helpButton, userButton);
+        menuBar.setTranslateY(70);
+        menuBase.setTop(menuBar);
+        /*
+        menuBar = createMenuBar();
+        homeButton = createHomeButton();
+        contentPane = new StackPane();
+        contentPane.getChildren().addAll(homeButton);
+        StackPane menuBase = new StackPane(contentPane, menuBar);
+        */
+
         //Table
-        TableView<Food> table = new TableView<Food>();
+        table = new TableView<Food>();
         table.setEditable(true);
-        TableColumn<Food, String> col = new TableColumn("Food");
+        col = new TableColumn<>("Food");
         col.setMinWidth(500);
-        TableColumn<Food, String> col2 = new TableColumn("Servings");
+        col2 = new TableColumn<>("Servings");
         col2.setMaxWidth(100);
-        TableColumn<Food, String> col3 = new TableColumn("Calories");
+        col3 = new TableColumn<>("Calories");
         col3.setMaxWidth(100);
+
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+        col.prefWidthProperty().bind(table.widthProperty().multiply(.6));
+        col2.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+        col3.prefWidthProperty().bind(table.widthProperty().multiply(.2));
+
         table.setItems(data);
         table.getColumns().addAll(col, col2, col3);
         
         //Area under table
-        TextField food = new TextField();
+        food = new TextField();
         food.setPromptText("Enter food");
-        TextField serv = new TextField();
+        serv = new TextField();
         serv.setPromptText("Enter servings");
-        TextField cal = new TextField();
+        cal = new TextField();
         cal.setPromptText("Enter calories");
-        Button addFood = new Button("+ADD FOOD");
-        Button addFilter = new Button("FILTER");
-        ComboBox combo = new ComboBox();
+        addFood = new Button("+ADD FOOD");
+        addFilter = new Button("FILTER");
+        combo = new ComboBox<>();
         combo.setPadding(new Insets(0, 0, 0, 300));
-        combo.getItems().addAll(
-            "Name",
-            "Calories (Least to Greatest)",
-            "Calories (Greatest to Least)"
-        );
+        combo.getItems().addAll("Name", "Calories (Least to Greatest)", "Calories (Greatest to Least)");
 
-        ProgressBar bar = new ProgressBar(0);
+        bar = new ProgressBar(0);
         //bar.setMinHeight(25);
         bar.setPadding(new Insets(50, 0, 0, 0));
         bar.setMinHeight(75);
@@ -85,21 +154,35 @@ public class Home extends Application{
 
         //Adds all nodes
         hb.getChildren().addAll(food, serv, cal, addFood, combo, addFilter);
+
+        HBox.setHgrow(combo, Priority.ALWAYS);
+
         vb.getChildren().addAll(table, hb, bar);
+
+        VBox.setVgrow(table, Priority.ALWAYS);
+
         pane.setCenter(vb);
+        pane.setBottom(menuBase);
 
         //Left margin
-        VBox leftSide = new VBox();
+        leftSide = new VBox();
         leftSide.setMinWidth(150);
-        Label overview = new Label("Overview");
-        Label log  = new Label("Diary");
+        overview = new Label("Overview");
+        log  = new Label("Diary");
         overview.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
         overview.setPadding(new Insets(0, 0, 10, 0));
         log.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
         leftSide.getChildren().addAll(overview, log);
         pane.setLeft(leftSide);
-        pane.setMargin(leftSide, new Insets(20, 0, 20, 20));
-        pane.setMargin(hello, new Insets(10, 10, 0, 10));
+        BorderPane.setMargin(leftSide, new Insets(20, 0, 20, 20));
+        BorderPane.setMargin(hello, new Insets(10, 10, 0, 10));
+        pane.setMinWidth(1200);
+
+        if (ThemeManager.getCurrentMode() == ThemeManager.ThemeMode.DARK) {
+            setDarkMode();
+        } else {
+            setLightMode();
+        }
 
         //Function for "+ADD FOOD" button
         addFood.setOnAction(new EventHandler<ActionEvent>() {
@@ -169,7 +252,120 @@ public class Home extends Application{
                 table.setItems(data);
             }
         });
+        
+        //Function for "Home" button
+        homeButton.setOnAction(e -> toggleMenuBar());
+
+        toggleButton.setOnAction(e -> {
+            ThemeManager.toggleMode();
+            if (ThemeManager.getCurrentMode() == ThemeManager.ThemeMode.DARK) {
+                setDarkMode();
+            } else {
+                setLightMode();
+            }
+        });
+
         return pane;
+    }
+
+    private void setDarkMode() {
+        // Apply dark theme
+        pane.setStyle("-fx-background-color: #393B49;");
+        leftSide.setStyle("-fx-background-color: #393B49;");
+        hello.setFill(Color.web("#FAF6EF"));
+        overview.setStyle("-fx-text-fill: #FAF6EF;");
+        log.setStyle("-fx-text-fill: #FAF6EF;");
+        food.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        serv.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        cal.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        addFood.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        addFilter.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        combo.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        //bar.setStyle("-fx-accent: green; -fx-progress-color: green;");
+        hb.setStyle("-fx-background-color: #393B49;");
+        vb.setStyle("-fx-background-color: #393B49;");
+        //table.setStyle("-fx-background-color: #444; -fx-text-fill: white;");
+        //col.setStyle("-fx-background-color: #444; -fx-column-header-background: #444;");
+        //col2.setStyle("-fx-background-color: #444;");
+        //col3.setStyle("-fx-background-color: #444;");
+        homeButton.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        menuBar.setStyle("-fx-background-color: #41455E;");
+        languageButton.setStyle("-fx-background-color: #393B49; -fx-text-fill: #FAF6EF;");
+        toggleButton.setStyle("-fx-background-color: #393B49; -fx-text-fill: #FAF6EF;");
+        userButton.setStyle("-fx-background-color: #393B49; -fx-text-fill: #FAF6EF;");
+        helpButton.setStyle("-fx-background-color: #393B49; -fx-text-fill: #FAF6EF;");
+    }
+
+    private void setLightMode() {
+        // Apply light theme
+        pane.setStyle("-fx-background-color: #F6EEDE;");
+        leftSide.setStyle("-fx-background-color: #F6EEDE;");
+        hello.setFill(Color.web("#41455E"));
+        overview.setStyle("-fx-text-fill: #41455E;");
+        log.setStyle("-fx-text-fill: #41455E;");
+        food.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        serv.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        cal.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        addFood.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        addFilter.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        combo.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        //bar.setStyle("-fx-accent: green; -fx-progress-color: green;");
+        hb.setStyle("-fx-background-color: #F6EEDE;");
+        vb.setStyle("-fx-background-color: #F6EEDE;");
+        homeButton.setStyle("-fx-background-color: #F9F4EA; -fx-text-fill: #41455E;");
+        menuBar.setStyle("-fx-background-color: #F9F4EA;");
+        languageButton.setStyle("-fx-background-color: #F6EEDE; -fx-text-fill: #41455E;");
+        toggleButton.setStyle("-fx-background-color: #F6EEDE; -fx-text-fill: #41455E;");
+        userButton.setStyle("-fx-background-color: #F6EEDE; -fx-text-fill: #41455E;");
+        helpButton.setStyle("-fx-background-color: #F6EEDE; -fx-text-fill: #41455E;");
+    }
+
+    /*
+    private VBox createMenuBar() {
+        Rectangle background = new Rectangle(1240, 100, Color.LIGHTSLATEGRAY);
+        VBox menuItems = new VBox(10);
+        menuItems.getChildren().addAll(
+            new Button("Profile"),
+            new Button("Settings"),
+            new Button("Help")
+        );
+        VBox.setMargin(menuItems, new Insets(10));
+
+        VBox menuBar = new VBox(background, menuItems);
+        menuBar.setLayoutY(800);
+        return menuBar;
+    }
+    */
+
+    /*
+    private Button createHomeButton() {
+        homeButton = new Button();
+        homeButton.setPrefSize(100, 100);
+        homeButton.setText("ND");
+        homeButton.setFont(Font.font("Tahoma", FontWeight.BOLD, 25));
+        homeButton.setShape(new Circle(50));
+        return homeButton;
+    }
+    */
+
+    private void toggleMenuBar() {
+        /*
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), menuBar);
+        if (isMenuOpen) {
+            tt.setToY(0);
+            isMenuOpen = false;
+        } else {
+            tt.setToY(-100);
+            isMenuOpen = true;
+        }
+        tt.play();
+        */
+        isMenuOpen = !isMenuOpen;
+        double endY = isMenuOpen ? 0 : 70;
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), menuBar);
+        tt.setToY(endY);
+        tt.setInterpolator(Interpolator.EASE_BOTH);
+        tt.play();
     }
 
     @Override

@@ -14,20 +14,46 @@ import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
 
+import javafx.scene.paint.Color;
+
 public class SignUp extends Application {
+
+    private TextField fNameField;
+    private TextField lNameField;
+    private Button submit;
+    private GridPane grid;
+    private Text welcome;
+    private Button toggleButton;
+    private Label fN;
+    private Label lN;
+
+    private GridPane grid2;
+    private Text welcome2;
+    private TextField ageField;
+    private TextField heightField;
+    private TextField weightField;
+    private Button submit2;
+    private Label a;
+    private Label h;
+    private Label w;
+    private Text goal;
+    private RadioButton lose;
+    private RadioButton gain;
+    private Button toggleButton2;
+
 
     @Override
     public void start(Stage primaryStage) {
         
         //creates the grid for the sign up page.
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(5);
         grid.setHgap(10);
         grid.setPadding(new Insets(20));
         //grid.setGridLinesVisible(true);
 
-        GridPane grid2 = new GridPane();
+        grid2 = new GridPane();
         grid2.setAlignment(Pos.CENTER);
         grid2.setVgap(5);
         grid2.setHgap(10);
@@ -35,20 +61,25 @@ public class SignUp extends Application {
         //grid2.setGridLinesVisible(true);
 
         //Scene ONE
-        Text welcome = new Text("NUTRITION TRACKER");
+        welcome = new Text("NUTRITION TRACKER");
         welcome.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
         grid.add(welcome, 2, 0);
-        TextField fNameField = new TextField();
-        TextField lNameField = new TextField();
-        Button submit = new Button("Submit");
+        fNameField = new TextField();
+        lNameField = new TextField();
+        submit = new Button("Submit");
+
+        toggleButton = new Button("Toggle Theme");
+
         fNameField.setPromptText("Enter first name");
         lNameField.setPromptText("Enter last name");
         grid.add(fNameField, 2, 1);
         grid.add(lNameField, 2, 2);
         grid.add(submit, 3, 3);
 
-        Label fN = new Label("First Name");
-        Label lN = new Label("Last Name");
+        grid.add(toggleButton, 2, 3);
+
+        fN = new Label("First Name");
+        lN = new Label("Last Name");
         grid.add(fN, 1, 1);
         grid.add(lN, 1, 2);
 
@@ -59,35 +90,62 @@ public class SignUp extends Application {
 
         //Scene TWO
         Scene scene1 = new Scene(grid2, 500, 450);
-        Text welcome2 = new Text("USER INFO");
+        welcome2 = new Text("USER INFO");
         welcome2.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
         grid2.add(welcome2, 2, 0);
-        TextField ageField = new TextField();
-        TextField heightField = new TextField();
-        TextField weightField = new TextField();
+        ageField = new TextField();
+        heightField = new TextField();
+        weightField = new TextField();
 
-        Button submit2 = new Button("Submit");
+        toggleButton2 = new Button("Toggle Theme");
+
+        submit2 = new Button("Submit");
         ageField.setPromptText("Enter age");
-        heightField.setPromptText("Enter height (inches)");
+        heightField.setPromptText("Enter height (in)");
         weightField.setPromptText("Enter weight (kg)");
         grid2.add(ageField, 2, 1);
         grid2.add(heightField, 2, 2);
         grid2.add(weightField, 2, 3);
         grid2.add(submit2, 3, 7);
 
-        Label a = new Label("Age");
-        Label h = new Label("Height (in)");
-        Label w = new Label("Weight (kg)");
+        grid2.add(toggleButton2, 2, 7);
+
+        a = new Label("Age");
+        h = new Label("Height (in)");
+        w = new Label("Weight (kg)");
         grid2.add(a, 1, 1);
         grid2.add(h, 1, 2);
         grid2.add(w, 1, 3);
 
-        Text goal = new Text("Purpose for Diet:");
-        RadioButton lose = new RadioButton("Lose Weight");
-        RadioButton gain = new RadioButton("Gain Weight");
+        goal = new Text("Purpose for Diet:");
+        lose = new RadioButton("Lose Weight");
+        gain = new RadioButton("Gain Weight");
         grid2.add(goal, 2,4);
         grid2.add(lose, 2,5);
         grid2.add(gain, 2,6);
+
+        // Apply light theme
+        setLightTheme();
+
+        //Event Handlers
+
+        toggleButton.setOnAction(e -> {
+            ThemeManager.toggleMode();
+            if (ThemeManager.getCurrentMode() == ThemeManager.ThemeMode.DARK) {
+                setDarkTheme();
+            } else {
+                setLightTheme();
+            }
+        });
+
+        toggleButton2.setOnAction(e -> {
+            ThemeManager.toggleMode();
+            if (ThemeManager.getCurrentMode() == ThemeManager.ThemeMode.DARK) {
+                setDarkTheme();
+            } else {
+                setLightTheme();
+            }
+        });
 
         submit.setOnAction (new EventHandler<ActionEvent>() {
             public void handle(ActionEvent e) throws IllegalArgumentException {
@@ -135,6 +193,59 @@ public class SignUp extends Application {
             }
         });
     }
+
+    private void setDarkTheme() {
+        // Apply dark theme
+        fNameField.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        lNameField.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        submit.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        toggleButton.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        fN.setTextFill(Color.web("#FAF6EF"));
+        lN.setTextFill(Color.web("#FAF6EF"));
+        grid.setStyle("-fx-background-color: #393B49;");
+        welcome.setFill(Color.web("#FAF6EF"));
+
+        welcome2.setFill(Color.web("#FAF6EF"));
+        ageField.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        heightField.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        weightField.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        submit2.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        a.setTextFill(Color.web("#FAF6EF"));
+        h.setTextFill(Color.web("#FAF6EF"));
+        w.setTextFill(Color.web("#FAF6EF"));
+        goal.setFill(Color.web("#FAF6EF"));
+        lose.setTextFill(Color.web("#FAF6EF"));
+        gain.setTextFill(Color.web("#FAF6EF"));
+        grid2.setStyle("-fx-background-color: #393B49;");
+        toggleButton2.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+    }
+
+    private void setLightTheme() {
+        // Apply light theme
+        fNameField.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        lNameField.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        submit.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        toggleButton.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+        fN.setTextFill(Color.web("#41455E"));
+        lN.setTextFill(Color.web("#41455E"));
+        grid.setStyle("-fx-background-color: #F6EEDE;");
+        welcome.setFill(Color.web("#41455E"));
+
+        welcome2.setFill(Color.web("#41455E"));
+        ageField.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        heightField.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        weightField.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        submit2.setStyle("-fx-background-color: #FAF6EF; -fx-text-fill: #41455E;");
+        a.setTextFill(Color.web("#41455E"));
+        h.setTextFill(Color.web("#41455E"));
+        w.setTextFill(Color.web("#41455E"));
+        goal.setFill(Color.web("#41455E"));
+        lose.setTextFill(Color.web("#41455E"));
+        gain.setTextFill(Color.web("#41455E"));
+        grid2.setStyle("-fx-background-color: #F6EEDE;");
+        toggleButton2.setStyle("-fx-background-color: #41455E; -fx-text-fill: #FAF6EF;");
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
