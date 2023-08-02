@@ -1,4 +1,4 @@
-public class Food implements Comparable{
+public class Food implements Comparable {
     private String ingredients;
     private double calories;
     private double serving;
